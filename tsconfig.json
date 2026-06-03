@@ -13,9 +13,8 @@
     "jsx": "react-jsx",
     "strict": false,
     "paths": {
-      "@@/*": ["../src/UI/hbd-ui/src/*"],
-      "@husqvarna/hbd-ui/src/*": ["../src/UI/hbd-ui/src/*"],
-      "@design-tokens/*": ["../src/UI/hbd-ui/src/design-tokens/*"]
+      "@husqvarna/ui-core/*": ["./vendor/ui-core/*"],
+      "@husqvarna/ui-core": ["./vendor/ui-core"]
     }
   },
   "include": ["src"]
