@@ -1,0 +1,10 @@
+import { Meta, StoryFn } from '@storybook/react-vite';
+import { default as Table } from './Table';
+declare const _default: Meta<typeof Table>;
+export default _default;
+export declare const Default: StoryFn<typeof Table>;
+export declare const Scrollable: StoryFn<typeof Table>;
+export declare const StickyHeader: StoryFn<typeof Table>;
+export declare const Group: StoryFn<typeof Table>;
+export declare const StickyHeaderAndScrollable: StoryFn<typeof Table>;
+export declare const StickyHeaderAndFirstColumnStickyAndScrollable: StoryFn<typeof Table>;

@@ -1,0 +1,33 @@
+import { default as React } from 'react';
+import { default as ResponsiveValue } from '../../base/responsive-value';
+import { SizesProps } from '../../hooks/ui/use-size';
+import { SpacingProps } from '../../hooks/ui/use-spacing';
+export type OverflowContainerProps = SizesProps & SpacingProps & {
+    wrapperSpacing?: SpacingProps;
+    className?: string;
+    children: React.ReactNode | React.ReactNode[];
+    direction?: ResponsiveValue<"horizontal" | "vertical" | "none">;
+    fadeOut?: "mask" | "shadow";
+    overflowStart?: boolean;
+    overflowEnd?: boolean;
+    offset?: ResponsiveValue<0 | 10>;
+    scrollTop?: number;
+    scrollLeft?: number;
+    onScroll?: (event: Event) => void;
+    scrollbarColor?: "black" | "grey";
+};
+declare const OverflowContainer: React.ForwardRefExoticComponent<SizesProps & import('../../hooks').MarginProps & import('../../hooks').PaddingProps & {
+    wrapperSpacing?: SpacingProps;
+    className?: string;
+    children: React.ReactNode | React.ReactNode[];
+    direction?: ResponsiveValue<"horizontal" | "vertical" | "none">;
+    fadeOut?: "mask" | "shadow";
+    overflowStart?: boolean;
+    overflowEnd?: boolean;
+    offset?: ResponsiveValue<0 | 10>;
+    scrollTop?: number;
+    scrollLeft?: number;
+    onScroll?: (event: Event) => void;
+    scrollbarColor?: "black" | "grey";
+} & React.RefAttributes<HTMLDivElement>>;
+export default OverflowContainer;

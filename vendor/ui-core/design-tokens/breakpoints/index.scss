@@ -1,0 +1,16 @@
+// -----------------------------------------------------
+// This file was generated, do not modify this directly.
+// change the design token-file and run 'npm run generate:tokens'
+// -------------------------------------------------------------------
+$ui-breakpoint-small: 0 !default; 
+$ui-breakpoint-medium: 768 !default; 
+$ui-breakpoint-large: 1200 !default; 
+$ui-breakpoint-extra-large: 1540 !default; 
+$ui-small-and-up:'(min-width:#{$ui-breakpoint-small}px)';
+$ui-small-and-down:'(max-width:#{$ui-breakpoint-medium}px)';
+$ui-medium-and-up:'(min-width:#{$ui-breakpoint-medium}px)';
+$ui-medium-and-down:'(max-width:#{$ui-breakpoint-large}px)';
+$ui-large-and-up:'(min-width:#{$ui-breakpoint-large}px)';
+$ui-large-and-down:'(max-width:#{$ui-breakpoint-extra-large}px)';
+$ui-extra-large-and-up:'(min-width:#{$ui-breakpoint-extra-large}px)';
+$ui-extra-large-and-down:'(max-width:#{$ui-breakpoint-extra-large}px)';
