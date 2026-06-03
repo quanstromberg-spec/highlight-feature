@@ -1,0 +1,49 @@
+{
+  "site": {
+    "name": "hbd-uk-en-gb",
+    "features": {
+      "reviews": {
+        "bazaarVoice": false,
+        "testFreaks": true,
+        "hideNoRatings": false
+      },
+      "commerce": {
+        "strikethroughPrices": true,
+        "enhancedEcom": true,
+        "geoFencingEnabled": true,
+        "settings": {
+          "__typename": "SalesForceCommerceSettings",
+          "cartMaxRowQuantity": 20,
+          "weee": true,
+          "baseUrl": "https://shop-dl.husqvarna.com/wcs/resources",
+          "storeId": "11251",
+          "checkoutUrl": "https://www.google.com"
+        }
+      },
+      "liveChat": {
+        "enabled": true,
+        "currentlyOpen": true
+      },
+      "productAssistant": {
+        "enabled": true
+      },
+      "wishList": {
+        "enabled": true,
+        "wishListUrl": {
+          "text": "Wish List",
+          "href": "/global/wish-list/",
+          "target": "",
+          "kind": "Internal",
+          "title": ""
+        },
+        "sharedListUrl": {
+          "text": "Shared list",
+          "href": "/global/wish-list/shared",
+          "target": "",
+          "kind": "Internal",
+          "title": "Shared"
+        }
+      }
+    }
+  }
+}
