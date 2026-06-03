@@ -1,4 +1,3 @@
-import { IconButton, IconTextLink, Typography } from "@husqvarna/ui-core/components";
 import React, { useEffect, useRef, useState } from "react";
 
 type FeatureItem = { subtitle: string; image: string; description: string };
@@ -22,6 +21,12 @@ const FEATURES: FeatureItem[] = [
   },
 ];
 
+const C = {
+  grey600: "#3D3D3C",
+  primary: "#FF6A13",
+  white: "#FFFFFF",
+};
+
 const IMAGE_W = 678;
 const IMAGE_H = 478;
 const MOBILE_IMAGE_H = 280;
@@ -30,7 +35,7 @@ const MOBILE_PEEK_OFFSET = 60;
 const SLIDE_DURATION = 320;
 const SLIDE_EASING = "ease-in-out";
 
-const calcIdleOffset = (c: number, slideStep: number) => (c > 0 ? -slideStep : 0);
+const calcIdleOffset = (c: number, step: number) => (c > 0 ? -step : 0);
 
 export type HighlightFeatureProps = {
   activeIndex?: number;
@@ -67,19 +72,14 @@ export const HighlightFeatureComponent = ({ activeIndex: initialIndex = 0, force
   }, [isMobile]);
 
   useEffect(() => {
-    if (isMobile) {
-      setStripOffset(calcIdleOffset(current, imageW + IMAGE_GAP));
-    }
-  }, [imageW]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (isMobile) setStripOffset(calcIdleOffset(current, imageW + IMAGE_GAP));
+  }, [imageW]); // eslint-disable-line
 
   const feature = FEATURES[current];
-  const prevIdx = current - 1;
-  const nextIdx = current + 1;
-
   const slots: { idx: number; slot: Slot }[] = [
-    ...(current > 0 ? [{ idx: prevIdx, slot: "prev" as Slot }] : []),
+    ...(current > 0 ? [{ idx: current - 1, slot: "prev" as Slot }] : []),
     { idx: current, slot: "current" as Slot },
-    ...(current < FEATURES.length - 1 ? [{ idx: nextIdx, slot: "next" as Slot }] : []),
+    ...(current < FEATURES.length - 1 ? [{ idx: current + 1, slot: "next" as Slot }] : []),
   ];
 
   const goNext = () => {
@@ -115,105 +115,78 @@ export const HighlightFeatureComponent = ({ activeIndex: initialIndex = 0, force
   const isOutgoing = (slot: Slot) =>
     animating && slot === "current" && direction === "prev";
 
-  const buttonTop = Math.round((imageH - 48) / 2);
+  const btnTop = Math.round((imageH - 48) / 2);
+
+  const arrowBtn = (hovered: boolean): React.CSSProperties => ({
+    width: 48, height: 48, borderRadius: "50%", border: "none", cursor: "pointer",
+    backgroundColor: hovered ? C.primary : C.white,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.16)", transition: "background-color 160ms", padding: 0, flexShrink: 0,
+  });
 
   return (
     <div style={{
       borderTop: "1px solid rgba(0,0,0,0.08)",
-      paddingTop: "40px",
-      paddingBottom: "36px",
-      paddingLeft: isMobile ? "24px" : undefined,
-      paddingRight: isMobile ? "24px" : undefined,
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
+      paddingTop: 40, paddingBottom: 36,
+      paddingLeft: isMobile ? 24 : undefined,
+      paddingRight: isMobile ? 24 : undefined,
+      display: "flex", flexDirection: "column", gap: 20,
     }}>
-      <Typography tag="p" variant="Heading4" color="Grey600" style={{ margin: 0 }}>
+      <p style={{ fontFamily: "'Husqvarna Gothic', sans-serif", fontWeight: 700, fontSize: 28, lineHeight: "32px", letterSpacing: "-0.2px", color: C.grey600, margin: 0 }}>
         Made for professionals
-      </Typography>
-      <Typography tag="p" variant="Body1" color="Grey600" style={{ margin: 0, maxWidth: isMobile ? undefined : "732px" }}>
+      </p>
+      <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 350, fontSize: 18, lineHeight: "28px", letterSpacing: "0.4px", color: C.grey600, margin: 0, maxWidth: isMobile ? undefined : 732 }}>
         Husqvarna robotic mowers are developed specifically for professionals. With connected fleet
         management, AI-assisted vision for enhanced safety and performance and hassle-free installation.
-      </Typography>
-
-      <Typography tag="p" variant="Subtitle2" color="Grey600" style={{ margin: 0 }}>
+      </p>
+      <p style={{ fontFamily: "'Husqvarna Gothic', sans-serif", fontWeight: 700, fontSize: isMobile ? 16 : 20, lineHeight: isMobile ? "20px" : "28px", color: C.grey600, margin: 0 }}>
         {feature.subtitle}
-      </Typography>
+      </p>
 
-      {/* Image strip */}
-      <div
-        ref={imageContainerRef}
-        style={{
-          position: "relative",
-          height: `${imageH}px`,
-          marginLeft: isMobile ? "-24px" : undefined,
-          marginRight: isMobile ? "-24px" : undefined,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            gap: `${IMAGE_GAP}px`,
-            transform: `translateX(${stripOffset}px)`,
-            transition: animating ? `transform ${SLIDE_DURATION}ms ${SLIDE_EASING}` : "none",
-          }}
-        >
+      <div ref={imageContainerRef} style={{ position: "relative", height: imageH, marginLeft: isMobile ? -24 : undefined, marginRight: isMobile ? -24 : undefined }}>
+        <div style={{ display: "flex", gap: IMAGE_GAP, transform: `translateX(${stripOffset}px)`, transition: animating ? `transform ${SLIDE_DURATION}ms ${SLIDE_EASING}` : "none" }}>
           {slots.map(({ idx, slot }) => (
-            <div
-              key={`${slot}-${current}`}
-              style={{
-                width: `${imageW}px`,
-                height: `${imageH}px`,
-                borderRadius: `${borderRadius}px`,
-                overflow: "hidden",
-                flexShrink: 0,
-                transform: isOutgoing(slot) ? "scale(0.8)" : slot === "current" || isIncoming(slot) ? "scale(1)" : "scale(0.8)",
-                transformOrigin: slot === "prev" ? "right center" : "left center",
-                transition: isIncoming(slot) || isOutgoing(slot) ? `transform ${SLIDE_DURATION}ms ${SLIDE_EASING}` : "none",
-              }}
-            >
-              <img
-                src={FEATURES[idx].image}
-                alt={FEATURES[idx].subtitle}
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              />
+            <div key={`${slot}-${current}`} style={{
+              width: imageW, height: imageH, borderRadius, overflow: "hidden", flexShrink: 0,
+              transform: isOutgoing(slot) ? "scale(0.8)" : slot === "current" || isIncoming(slot) ? "scale(1)" : "scale(0.8)",
+              transformOrigin: slot === "prev" ? "right center" : "left center",
+              transition: isIncoming(slot) || isOutgoing(slot) ? `transform ${SLIDE_DURATION}ms ${SLIDE_EASING}` : "none",
+            }}>
+              <img src={FEATURES[idx].image} alt={FEATURES[idx].subtitle} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
           ))}
         </div>
 
-        {/* Left arrow */}
         {current > 0 && (
-          <div
-            style={{ position: "absolute", left: isMobile ? "12px" : "-24px", top: `${buttonTop}px`, zIndex: 2 }}
-            onMouseEnter={() => setLeftHovered(true)}
-            onMouseLeave={() => setLeftHovered(false)}
-          >
-            <IconButton iconId="angle-left" variant={leftHovered ? "Primary" : "White"} size="Big" onClick={goPrev} aria-label="Previous feature" />
+          <div style={{ position: "absolute", left: isMobile ? 12 : -24, top: btnTop, zIndex: 2 }}
+            onMouseEnter={() => setLeftHovered(true)} onMouseLeave={() => setLeftHovered(false)}>
+            <button style={arrowBtn(leftHovered)} onClick={goPrev} aria-label="Previous">
+              <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
+                <path d="M8 2L2 8L8 14" stroke={leftHovered ? C.white : C.grey600} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
         )}
 
-        {/* Right arrow */}
         {current < FEATURES.length - 1 && (
-          <div
-            style={{
-              position: "absolute",
-              ...(isMobile ? { right: "36px" } : { left: `${imageW - 24}px` }),
-              top: `${buttonTop}px`,
-              zIndex: 2,
-            }}
-            onMouseEnter={() => setRightHovered(true)}
-            onMouseLeave={() => setRightHovered(false)}
-          >
-            <IconButton iconId="angle-right" variant={rightHovered ? "Primary" : "White"} size="Big" onClick={goNext} aria-label="Next feature" />
+          <div style={{ position: "absolute", ...(isMobile ? { right: 36 } : { left: imageW - 24 }), top: btnTop, zIndex: 2 }}
+            onMouseEnter={() => setRightHovered(true)} onMouseLeave={() => setRightHovered(false)}>
+            <button style={arrowBtn(rightHovered)} onClick={goNext} aria-label="Next">
+              <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
+                <path d="M2 2L8 8L2 14" stroke={rightHovered ? C.white : C.grey600} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
         )}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: isMobile ? undefined : "700px" }}>
-        <Typography tag="p" variant="Body1" color="Grey600" style={{ margin: 0 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: isMobile ? undefined : 700 }}>
+        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 350, fontSize: 18, lineHeight: "28px", letterSpacing: "0.4px", color: C.grey600, margin: 0 }}>
           {feature.description}
-        </Typography>
-        <IconTextLink text="Read more" iconId="arrow-right" variant="Body1" href="#" />
+        </p>
+        <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "'Roboto', sans-serif", fontWeight: 350, fontSize: 18, lineHeight: "28px", color: C.grey600, textDecoration: "underline" }}>
+          <span>→</span><span>Read more</span>
+        </a>
       </div>
     </div>
   );
